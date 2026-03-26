@@ -8,7 +8,10 @@ import ArticleMeta from '../../components/blog/ArticleMeta.astro';
 import ArticleJsonLd from '../../components/seo/ArticleJsonLd.astro';
 import BreadcrumbJsonLd from '../../components/seo/BreadcrumbJsonLd.astro';
 import ShareButtons from '../../components/common/ShareButtons.astro';
+import ProductCard from '../../components/product/ProductCard.astro';
 import { SITE } from '../../config/site';
+import { parseAmazonAsinInput } from '../../lib/amazon-asin';
+import { getAsinsFromSearchKeywords } from '../../lib/amazon-api';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -26,6 +29,35 @@ const related = allPosts
   .filter((p) => p.id !== post.id && (p.data.category === post.data.category || p.data.tags.some((t: string) => post.data.tags.includes(t))))
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
   .slice(0, 4);
+
+const explicitAsins = [
+  ...new Set(
+    (post.data.amazonAsins ?? [])
+      .map(parseAmazonAsinInput)
+      .filter((a): a is string => a !== null),
+  ),
+];
+
+const searchKeywords = [
+  ...(post.data.amazonSearchKeywords ?? []),
+  ...(post.data.amazonSearchUseTags === true ? post.data.tags : []),
+];
+
+const searchAsins =
+  searchKeywords.length > 0
+    ? await getAsinsFromSearchKeywords(searchKeywords, {
+        searchIndex: post.data.amazonSearchIndex,
+        maxPerKeyword: post.data.amazonSearchMaxPerKeyword ?? 1,
+      })
+    : [];
+
+const seenAsins = new Set<string>();
+const amazonAsinList: string[] = [];
+for (const a of [...explicitAsins, ...searchAsins]) {
+  if (seenAsins.has(a)) continue;
+  seenAsins.add(a);
+  amazonAsinList.push(a);
+}
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description} ogType="article">
@@ -74,6 +106,22 @@ const related = allPosts
                 prose-img:rounded-xl prose-img:shadow-md">
       <Content />
     </div>
+
+    {amazonAsinList.length > 0 && (
+      <section
+        class="not-prose mt-14 border-t border-gray-200 dark:border-gray-700 pt-10"
+        aria-label="紹介商品"
+      >
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          紹介している商品
+        </h2>
+        <div class="space-y-8">
+          {amazonAsinList.map((asin) => (
+            <ProductCard asin={asin} />
+          ))}
+        </div>
+      </section>
+    )}
 
     <ShareButtons title={post.data.title} url={`${SITE.url}/blog/${post.id}`} />
 

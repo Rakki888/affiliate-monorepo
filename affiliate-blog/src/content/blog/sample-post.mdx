@@ -5,6 +5,12 @@ category: "gadget"
 tags: ["テスト", "サンプル"]
 publishedAt: 2026-03-26
 draft: false
+amazonAsins:
+  - "https://www.amazon.co.jp/dp/B0CLKNF86Q"
+# PA-API（AMAZON_ACCESS_KEY 等）が設定されているビルドでは、検索で追加の商品カードを取得
+amazonSearchKeywords:
+  - "Echo Dot 第5世代"
+amazonSearchMaxPerKeyword: 1
 ---
 
 ## はじめに
@@ -31,4 +37,8 @@ draft: false
 
 ## まとめ
 
-この記事はサンプルです。実際の記事ではここに商品カードやランキングコンポーネントを配置します。
+この記事はサンプルです。本文に貼った Amazon の商品 URL はビルド時に **アソシエイトタグ付き** に自動で置き換わります（環境変数 `AMAZON_ASSOCIATE_TAG`）。
+
+例: [Echo Dot（サンプルリンク）](https://www.amazon.co.jp/dp/B09B8V1LZ3)
+
+フロントマターの `amazonAsins` には、上記のように **URL でも ASIN 10 桁でも** 列挙でき、記事末尾に商品カードが自動表示されます。

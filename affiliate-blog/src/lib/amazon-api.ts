@@ -436,3 +436,40 @@ export async function searchProducts(
     return [];
   }
 }
+
+const MAX_KEYWORD_SEARCHES = 10;
+
+/**
+ * 各キーワードで SearchItems し、上位 N 件の ASIN を重複除去して返す（PA-API 未設定時は []）
+ */
+export async function getAsinsFromSearchKeywords(
+  keywords: string[],
+  opts?: { searchIndex?: string; maxPerKeyword?: number },
+): Promise<string[]> {
+  if (!isApiConfigured()) {
+    return [];
+  }
+
+  const maxPer = Math.min(
+    5,
+    Math.max(1, opts?.maxPerKeyword ?? 1),
+  );
+  const seen = new Set<string>();
+  const asins: string[] = [];
+
+  const list = [...new Set(keywords.map((k) => k.trim()).filter(Boolean))].slice(
+    0,
+    MAX_KEYWORD_SEARCHES,
+  );
+
+  for (const kw of list) {
+    const products = await searchProducts(kw, opts?.searchIndex);
+    for (const p of products.slice(0, maxPer)) {
+      if (!p.asin || seen.has(p.asin)) continue;
+      seen.add(p.asin);
+      asins.push(p.asin);
+    }
+  }
+
+  return asins;
+}
