@@ -1,0 +1,48 @@
+---
+import { formatDate } from '../../lib/utils';
+
+interface Props {
+  title: string;
+  description: string;
+  category: string;
+  publishedAt: Date;
+  slug: string;
+  image?: string;
+}
+
+const { title, description, category, publishedAt, slug, image } = Astro.props;
+---
+
+<article class="group">
+  <a href={`/blog/${slug}`} class="block rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden hover:border-amber-300 dark:hover:border-amber-600 hover:shadow-lg transition-all">
+    {/* サムネイル */}
+    {image ? (
+      <div class="aspect-video overflow-hidden bg-gray-100 dark:bg-gray-700">
+        <img src={image} alt={title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+      </div>
+    ) : (
+      <div class="aspect-video bg-gradient-to-br from-amber-50 to-orange-50 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
+        <span class="text-4xl opacity-50">📝</span>
+      </div>
+    )}
+
+    <div class="p-5">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+          {category}
+        </span>
+        <time class="text-xs text-gray-500 dark:text-gray-400" datetime={publishedAt.toISOString()}>
+          {formatDate(publishedAt)}
+        </time>
+      </div>
+
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors line-clamp-2">
+        {title}
+      </h2>
+
+      <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+        {description}
+      </p>
+    </div>
+  </a>
+</article>

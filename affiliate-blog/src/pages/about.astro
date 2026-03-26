@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/common/Breadcrumb.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout title="サイトについて" description={`${SITE.name}は${SITE.description}`}>
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
+    <Breadcrumb items={[
+      { label: 'ホーム', href: '/' },
+      { label: 'サイトについて' },
+    ]} />
+
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">サイトについて</h1>
+
+    <div class="prose prose-gray dark:prose-invert prose-lg max-w-none">
+      <p>
+        <strong>{SITE.name}</strong>をご覧いただきありがとうございます。
+      </p>
+
+      <p>
+        {SITE.description}
+      </p>
+
+      <h2>運営方針</h2>
+      <ul>
+        <li>実際に使って良いと思った商品のみを紹介します</li>
+        <li>メリットだけでなくデメリットも正直に記載します</li>
+        <li>価格やスペックの情報は可能な限り最新に保つよう努めます</li>
+      </ul>
+
+      <h2>アフィリエイトについて</h2>
+      <p>
+        当サイトは Amazon アソシエイト・プログラムに参加しています。
+        記事内のリンクから商品を購入された場合、当サイトに紹介料が支払われることがあります。
+        この収益はサイトの運営費に充てさせていただいています。
+      </p>
+      <p>
+        なお、アフィリエイト報酬の有無が記事の内容や評価に影響することはありません。
+      </p>
+
+      <h2>お問い合わせ</h2>
+      <p>
+        記事に関するご質問・ご指摘がございましたら、お気軽にお問い合わせください。
+      </p>
+    </div>
+  </div>
+</BaseLayout>

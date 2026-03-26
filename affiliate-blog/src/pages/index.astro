@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/blog/ArticleCard.astro';
+import WebsiteJsonLd from '../components/seo/WebsiteJsonLd.astro';
+import { SITE, CATEGORIES, POSTS_PER_PAGE } from '../config/site';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = allPosts
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+  .slice(0, POSTS_PER_PAGE);
+---
+
+<BaseLayout>
+  <WebsiteJsonLd slot="head" />
+  {/* ヒーローセクション */}
+  <section class="relative overflow-hidden bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+      <div class="text-center">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 dark:text-white">
+          本当に良いモノだけを<br />
+          <span class="text-amber-500 dark:text-amber-400">厳選して紹介</span>
+        </h1>
+        <p class="mt-6 text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          {SITE.description}
+        </p>
+      </div>
+    </div>
+    <div class="absolute -top-24 -right-24 w-96 h-96 bg-amber-200/30 dark:bg-amber-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-orange-200/30 dark:bg-orange-500/10 rounded-full blur-3xl"></div>
+  </section>
+
+  {/* 最新記事 */}
+  <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16">
+    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-8">
+      最新記事
+    </h2>
+
+    {posts.length > 0 ? (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => (
+          <ArticleCard
+            title={post.data.title}
+            description={post.data.description}
+            category={post.data.category}
+            publishedAt={post.data.publishedAt}
+            slug={post.id}
+            image={post.data.image}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-600 p-12 text-center">
+        <p class="text-gray-500 dark:text-gray-400 text-lg">記事はまだありません。</p>
+      </div>
+    )}
+  </section>
+
+  {/* カテゴリ一覧 */}
+  <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16">
+    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-8">
+      カテゴリ
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {CATEGORIES.map((cat) => (
+        <a
+          href={`/category/${cat.slug}`}
+          class="group block p-6 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-amber-300 dark:hover:border-amber-600 hover:shadow-lg transition-all"
+        >
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+            {cat.name}
+          </h3>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            {cat.description}
+          </p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

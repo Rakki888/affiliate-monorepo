@@ -1,0 +1,82 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/common/Breadcrumb.astro';
+import TableOfContents from '../../components/blog/TableOfContents.astro';
+import RelatedPosts from '../../components/blog/RelatedPosts.astro';
+import ArticleMeta from '../../components/blog/ArticleMeta.astro';
+import ArticleJsonLd from '../../components/seo/ArticleJsonLd.astro';
+import BreadcrumbJsonLd from '../../components/seo/BreadcrumbJsonLd.astro';
+import ShareButtons from '../../components/common/ShareButtons.astro';
+import { SITE } from '../../config/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const related = allPosts
+  .filter((p) => p.id !== post.id && (p.data.category === post.data.category || p.data.tags.some((t: string) => post.data.tags.includes(t))))
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+  .slice(0, 4);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description} ogType="article">
+  <ArticleJsonLd
+    slot="head"
+    title={post.data.title}
+    description={post.data.description}
+    publishedAt={post.data.publishedAt}
+    updatedAt={post.data.updatedAt}
+    image={post.data.image}
+  />
+  <BreadcrumbJsonLd
+    slot="head"
+    items={[
+      { label: 'ホーム', href: '/' },
+      { label: post.data.category, href: `/category/${post.data.category}` },
+      { label: post.data.title },
+    ]}
+  />
+  <article class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
+    <Breadcrumb items={[
+      { label: 'ホーム', href: '/' },
+      { label: post.data.category, href: `/category/${post.data.category}` },
+      { label: post.data.title },
+    ]} />
+
+    <header class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
+        {post.data.title}
+      </h1>
+      <div class="mt-4">
+        <ArticleMeta
+          publishedAt={post.data.publishedAt}
+          updatedAt={post.data.updatedAt}
+          category={post.data.category}
+          tags={post.data.tags}
+        />
+      </div>
+    </header>
+
+    <TableOfContents headings={headings} />
+
+    <div class="prose prose-gray dark:prose-invert prose-lg max-w-none
+                prose-headings:font-bold prose-headings:scroll-mt-20
+                prose-a:text-blue-600 dark:prose-a:text-blue-400
+                prose-img:rounded-xl prose-img:shadow-md">
+      <Content />
+    </div>
+
+    <ShareButtons title={post.data.title} url={`${SITE.url}/blog/${post.id}`} />
+
+    <RelatedPosts posts={related} />
+  </article>
+</BaseLayout>

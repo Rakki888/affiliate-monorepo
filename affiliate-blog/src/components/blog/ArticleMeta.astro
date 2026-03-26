@@ -1,0 +1,47 @@
+---
+import { formatDate } from '../../lib/utils';
+import { getReadingTime } from '../../lib/utils';
+
+interface Props {
+  publishedAt: Date;
+  updatedAt?: Date;
+  category: string;
+  tags: string[];
+  content?: string;
+}
+
+const { publishedAt, updatedAt, category, tags, content } = Astro.props;
+const readingTime = content ? getReadingTime(content) : undefined;
+---
+
+<div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500 dark:text-gray-400">
+  <time datetime={publishedAt.toISOString()}>
+    {formatDate(publishedAt)}
+  </time>
+
+  {updatedAt && updatedAt.getTime() !== publishedAt.getTime() && (
+    <span>
+      更新: {formatDate(updatedAt)}
+    </span>
+  )}
+
+  {readingTime && (
+    <span>約{readingTime}分で読めます</span>
+  )}
+
+  <a
+    href={`/category/${category}`}
+    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors"
+  >
+    {category}
+  </a>
+
+  {tags.map((tag) => (
+    <a
+      href={`/tag/${tag}`}
+      class="text-xs text-gray-500 hover:text-amber-600 dark:text-gray-400 dark:hover:text-amber-400 transition-colors"
+    >
+      #{tag}
+    </a>
+  ))}
+</div>

@@ -1,0 +1,27 @@
+---
+import JsonLd from './JsonLd.astro';
+import { SITE } from '../../config/site';
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+const listItems = items.map((item, idx) => ({
+  '@type': 'ListItem' as const,
+  position: idx + 1,
+  name: item.label,
+  ...(item.href ? { item: new URL(item.href, SITE.url).toString() } : {}),
+}));
+---
+
+<JsonLd data={{
+  '@type': 'BreadcrumbList',
+  itemListElement: listItems,
+}} />

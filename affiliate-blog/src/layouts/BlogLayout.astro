@@ -1,0 +1,71 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  publishedAt: Date;
+  updatedAt?: Date;
+  category: string;
+  tags: string[];
+  ogImage?: string;
+}
+
+const { title, description, publishedAt, updatedAt, category, tags, ogImage } = Astro.props;
+
+const formattedDate = publishedAt.toLocaleDateString('ja-JP', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const formattedUpdatedDate = updatedAt?.toLocaleDateString('ja-JP', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={title} description={description} ogImage={ogImage} ogType="article">
+  <article class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
+    <!-- 記事ヘッダー -->
+    <header class="mb-8">
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <a
+          href={`/category/${category}`}
+          class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors"
+        >
+          {category}
+        </a>
+        {tags.map((tag) => (
+          <a
+            href={`/tag/${tag}`}
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
+        {title}
+      </h1>
+
+      <div class="mt-4 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+        <time datetime={publishedAt.toISOString()}>
+          {formattedDate}
+        </time>
+        {formattedUpdatedDate && formattedUpdatedDate !== formattedDate && (
+          <span>（更新: {formattedUpdatedDate}）</span>
+        )}
+      </div>
+    </header>
+
+    <!-- 記事本文 -->
+    <div class="prose prose-gray dark:prose-invert prose-lg max-w-none
+                prose-headings:font-bold
+                prose-a:text-blue-600 dark:prose-a:text-blue-400
+                prose-img:rounded-xl prose-img:shadow-md">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

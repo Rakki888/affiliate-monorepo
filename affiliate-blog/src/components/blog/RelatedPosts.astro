@@ -1,0 +1,35 @@
+---
+import ArticleCard from './ArticleCard.astro';
+
+interface PostData {
+  title: string;
+  description: string;
+  category: string;
+  publishedAt: Date;
+  image?: string;
+}
+
+interface Props {
+  posts: { id: string; data: PostData }[];
+}
+
+const { posts } = Astro.props;
+---
+
+{posts.length > 0 && (
+  <section class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">関連記事</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {posts.slice(0, 4).map((post) => (
+        <ArticleCard
+          title={post.data.title}
+          description={post.data.description}
+          category={post.data.category}
+          publishedAt={post.data.publishedAt}
+          slug={post.id}
+          image={post.data.image}
+        />
+      ))}
+    </div>
+  </section>
+)}

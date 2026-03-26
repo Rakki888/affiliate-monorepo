@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/blog/ArticleCard.astro';
+import Breadcrumb from '../../components/common/Breadcrumb.astro';
+import { CATEGORIES } from '../../config/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const categories = [...new Set(posts.map((p) => p.data.category))];
+
+  return categories.map((cat) => ({
+    params: { name: cat },
+    props: {
+      category: cat,
+      posts: posts
+        .filter((p) => p.data.category === cat)
+        .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()),
+    },
+  }));
+}
+
+const { category, posts } = Astro.props;
+const catDef = CATEGORIES.find((c) => c.slug === category || c.name === category);
+const displayName = catDef?.name ?? category;
+const description = catDef?.description ?? `${displayName}に関する記事の一覧です。`;
+---
+
+<BaseLayout title={`${displayName}の記事一覧`} description={description}>
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10">
+    <Breadcrumb items={[
+      { label: 'ホーム', href: '/' },
+      { label: displayName },
+    ]} />
+
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">{displayName}</h1>
+
+    {posts.length > 0 ? (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post: any) => (
+          <ArticleCard
+            title={post.data.title}
+            description={post.data.description}
+            category={post.data.category}
+            publishedAt={post.data.publishedAt}
+            slug={post.id}
+            image={post.data.image}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="text-gray-500 dark:text-gray-400">このカテゴリにはまだ記事がありません。</p>
+    )}
+  </div>
+</BaseLayout>
