@@ -2,7 +2,7 @@
 
 > **IMPORTANT: メタタグ・構造化データ・サイトマップなど SEO 関連の実装時は必ず本ドキュメントを参照すること。**
 > JSON-LD のスキーマ・OGP タグ・パフォーマンス目標はすべて本書の仕様に従う。
-> 関連: [`architecture.md`](./architecture.md) / [`component-spec.md`](./component-spec.md)（商品の構造化データ） / [`requirement.md`](./requirement.md)（非機能要件）
+> 関連: [`README.md`](./README.md) / [`architecture.md`](./architecture.md) / [`component-spec.md`](./component-spec.md)（商品の構造化データ） / [`deal-pipeline.md`](./deal-pipeline.md)（セール記事ページのメタ） / [`requirement.md`](./requirement.md)（非機能要件）
 
 ## 1. メタタグ
 

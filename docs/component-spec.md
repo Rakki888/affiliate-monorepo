@@ -2,7 +2,7 @@
 
 > **IMPORTANT: UI コンポーネントの実装・修正時は必ず本ドキュメントを参照すること。**
 > Props 定義・表示要素・レイアウト仕様はすべて本書に従う。
-> 関連: [`amazon-api.md`](./amazon-api.md)（Product 型定義） / [`architecture.md`](./architecture.md)（ディレクトリ構成） / [`seo-spec.md`](./seo-spec.md)（構造化データ）
+> 関連: [`README.md`](./README.md) / [`amazon-api.md`](./amazon-api.md)（Product 型定義） / [`architecture.md`](./architecture.md)（ディレクトリ構成） / [`seo-spec.md`](./seo-spec.md)（構造化データ） / [`deal-pipeline.md`](./deal-pipeline.md)（自動記事での利用）
 
 ## 1. 商品系コンポーネント
 

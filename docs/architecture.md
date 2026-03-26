@@ -2,7 +2,7 @@
 
 > **IMPORTANT: 実装時は必ず本ドキュメントおよび `docs/` 配下の関連ドキュメントを参照すること。**
 > 技術スタック・ディレクトリ構成・モジュール設計はすべて本書に従う。
-> 関連: [`requirement.md`](./requirement.md) / [`amazon-api.md`](./amazon-api.md) / [`component-spec.md`](./component-spec.md) / [`seo-spec.md`](./seo-spec.md) / [`content-guide.md`](./content-guide.md) / [`tasks.md`](./tasks.md)
+> 関連: [`README.md`](./README.md) / [`requirement.md`](./requirement.md) / [`amazon-api.md`](./amazon-api.md) / [`component-spec.md`](./component-spec.md) / [`seo-spec.md`](./seo-spec.md) / [`content-guide.md`](./content-guide.md) / [`deal-pipeline.md`](./deal-pipeline.md) / [`tasks.md`](./tasks.md)
 
 ## 1. 技術スタック
 
@@ -105,12 +105,14 @@ affiliate-blog/
 ├── .gitignore
 │
 ├── docs/                      # ドキュメント
+│   ├── README.md              # 索引（IMPORTANT: まずここから参照）
 │   ├── requirement.md
 │   ├── architecture.md
 │   ├── amazon-api.md
 │   ├── component-spec.md
 │   ├── seo-spec.md
 │   ├── content-guide.md
+│   ├── deal-pipeline.md       # セール自動検知・記事生成・X 投稿
 │   └── tasks.md
 │
 ├── src/
@@ -201,6 +203,12 @@ PA-API 5.0 との通信を担当。詳細は `amazon-api.md` を参照。
 - カテゴリ定義
 - ナビゲーションメニュー定義
 - SNSアカウント情報
+
+### 5.4 セール自動投稿パイプライン（外部リポジトリ）
+
+日次の価格監視・MDX 自動生成・X 投稿は、ブログ本体とは別の Python リポジトリ（`Desktop/スクレイピング`）で実行する。
+
+> **IMPORTANT:** フロー・設定・GitHub Actions の詳細は [`deal-pipeline.md`](./deal-pipeline.md) を参照すること。
 
 ## 6. 環境変数
 

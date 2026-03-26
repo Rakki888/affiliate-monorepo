@@ -2,7 +2,7 @@
 
 > **IMPORTANT: PA-API 連携の実装・修正時は必ず本ドキュメントを参照すること。**
 > 型定義・キャッシュ戦略・エラーハンドリング・レート制限対策はすべて本書の仕様に従う。
-> 関連: [`architecture.md`](./architecture.md) / [`component-spec.md`](./component-spec.md) / [`requirement.md`](./requirement.md)
+> 関連: [`README.md`](./README.md) / [`architecture.md`](./architecture.md) / [`component-spec.md`](./component-spec.md) / [`deal-pipeline.md`](./deal-pipeline.md)（自動記事内の ProductCard と併用時） / [`requirement.md`](./requirement.md)
 
 ## 1. 概要
 

@@ -2,7 +2,7 @@
 
 > **IMPORTANT: 記事の作成・テンプレートの修正時は必ず本ドキュメントを参照すること。**
 > フロントマター定義・商品コンポーネントの使い方・ファイル命名規則はすべて本書に従う。
-> 関連: [`component-spec.md`](./component-spec.md)（商品コンポーネントの Props 詳細） / [`seo-spec.md`](./seo-spec.md)（メタタグ生成ルール）
+> 関連: [`README.md`](./README.md) / [`component-spec.md`](./component-spec.md)（商品コンポーネントの Props 詳細） / [`seo-spec.md`](./seo-spec.md)（メタタグ生成ルール） / [`deal-pipeline.md`](./deal-pipeline.md)（自動生成 MDX の体裁）
 
 ## 1. 記事ファイルの配置
 
@@ -10,10 +10,14 @@
 
 ```
 src/content/blog/
+├── deals/                     # セール自動生成記事（パイプライン出力先）
+│   └── YYYY-MM-DD-amazon-deals.mdx
 ├── best-wireless-earphones-2026.mdx
 ├── iphone-case-review.mdx
 └── kindle-paperwhite-vs-oasis.mdx
 ```
+
+> **IMPORTANT:** `deals/` 配下は主にスクレイピング側ジョブが生成する。体裁・フロントマターは [`deal-pipeline.md`](./deal-pipeline.md) と本書のスキーマに合わせる。
 
 ファイル名がそのまま URL のスラッグになる。
 

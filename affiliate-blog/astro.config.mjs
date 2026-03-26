@@ -8,7 +8,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: process.env.SITE_URL || 'https://example.com',
+  site: process.env.SITE_URL || 'https://amazon-affiliate-blog.vercel.app',
   integrations: [react(), mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
