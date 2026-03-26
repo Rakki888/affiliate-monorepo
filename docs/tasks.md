@@ -1,6 +1,7 @@
 # 開発タスク管理
 
 > **IMPORTANT: 各タスクの実装前に、該当する仕様ドキュメントを必ず確認すること。**
+> ドキュメント索引は [`README.md`](./README.md) を参照。
 >
 > | Phase | 参照すべきドキュメント |
 > |-------|----------------------|
@@ -11,6 +12,7 @@
 > | Phase 5 | [`seo-spec.md`](./seo-spec.md) |
 > | Phase 6 | [`component-spec.md`](./component-spec.md), [`architecture.md`](./architecture.md) |
 > | Phase 7 | [`requirement.md`](./requirement.md)（非機能要件の確認） |
+> | Phase 8 | [`deal-pipeline.md`](./deal-pipeline.md), [`content-guide.md`](./content-guide.md), [`requirement.md`](./requirement.md)（2.6） |
 
 ## Phase 1: プロジェクト初期化・基本レイアウト
 
@@ -134,6 +136,22 @@
 - [ ] Google Search Console への登録 ※手動操作が必要
 - [ ] サイトマップの送信 ※手動操作が必要
 
+## Phase 8: セール自動検知・記事生成・X 投稿パイプライン
+
+> **IMPORTANT:** 仕様の詳細は [`deal-pipeline.md`](./deal-pipeline.md) を参照。実装は主に `Desktop/スクレイピング` リポジトリ。
+
+- [x] `jobs/deal_detector.py` — 割引率・前日比価格下落でセール商品を抽出
+- [x] `jobs/article_generator.py` — `affiliate-blog/src/content/blog/deals/` に MDX 生成
+- [x] `jobs/x_poster.py` — X API v2 で自動投稿
+- [x] `jobs/daily_amazon.py` — 上記パイプラインの呼び出し統合
+- [x] `config.yaml` — `deals` / X 関連設定
+- [x] `scraper/config.py` — 環境変数で deals 上書き
+- [x] `requirements.txt` — `tweepy` 等の依存追加
+- [x] `.github/workflows/amazon_daily.yml` — ブログ checkout・`BLOG_REPO_PATH`・ブログ push ステップ
+- [ ] 本番: GitHub Secrets（`BLOG_PUSH_TOKEN`, `SITE_URL`, X 系）を設定 ※手動
+- [ ] 本番: ブログ側で `deals/` 記事のビルド・表示確認
+- [ ] 本番: X 投稿・文字数・リンクの動作確認
+
 ---
 
 ## 進捗サマリー
@@ -147,4 +165,5 @@
 | Phase 5 | **完了** | 12 / 13 |
 | Phase 6 | **完了** | 11 / 12 |
 | Phase 7 | 一部手動 | 3 / 12 |
-| **合計** | | **84 / 96** |
+| Phase 8 | 実装済（本番設定は手動） | 8 / 11 |
+| **合計** | | **92 / 107** |
