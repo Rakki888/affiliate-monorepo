@@ -9,6 +9,7 @@ import ArticleJsonLd from '../../components/seo/ArticleJsonLd.astro';
 import BreadcrumbJsonLd from '../../components/seo/BreadcrumbJsonLd.astro';
 import ShareButtons from '../../components/common/ShareButtons.astro';
 import ProductCard from '../../components/product/ProductCard.astro';
+import AmazonSearchFallback from '../../components/product/AmazonSearchFallback.astro';
 import { SITE } from '../../config/site';
 import { parseAmazonAsinInput } from '../../lib/amazon-asin';
 import { getAsinsFromSearchKeywords } from '../../lib/amazon-api';
@@ -58,6 +59,13 @@ for (const a of [...explicitAsins, ...searchAsins]) {
   seenAsins.add(a);
   amazonAsinList.push(a);
 }
+
+const uniqueSearchKeywords = [
+  ...new Set(searchKeywords.map((k) => k.trim()).filter(Boolean)),
+].slice(0, 10);
+
+const showAmazonSearchFallback =
+  uniqueSearchKeywords.length > 0 && amazonAsinList.length === 0;
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description} ogType="article">
@@ -121,6 +129,10 @@ for (const a of [...explicitAsins, ...searchAsins]) {
           ))}
         </div>
       </section>
+    )}
+
+    {showAmazonSearchFallback && (
+      <AmazonSearchFallback keywords={uniqueSearchKeywords} />
     )}
 
     <ShareButtons title={post.data.title} url={`${SITE.url}/blog/${post.id}`} />

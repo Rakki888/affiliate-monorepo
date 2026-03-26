@@ -1,0 +1,52 @@
+---
+interface Props {
+  keywords: string[];
+}
+
+const { keywords } = Astro.props;
+const marketplace = import.meta.env.AMAZON_MARKETPLACE ?? 'www.amazon.co.jp';
+const tag = import.meta.env.AMAZON_ASSOCIATE_TAG ?? '';
+
+const links = keywords.map((kw) => {
+  const u = new URL(`https://${marketplace}/s`);
+  u.searchParams.set('k', kw);
+  if (tag) u.searchParams.set('tag', tag);
+  return { label: kw, href: u.toString() };
+});
+---
+
+<section
+  class="not-prose mt-14 border-t border-gray-200 dark:border-gray-700 pt-10"
+  aria-label="Amazonで関連を検索"
+>
+  <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+    Amazon で関連商品を探す
+  </h2>
+  <p class="text-sm text-gray-600 dark:text-gray-400 mb-5">
+    商品カードを表示するにはビルド時に PA-API の設定が必要です。以下から同じキーワードで Amazon を開けます。
+  </p>
+  <ul class="space-y-3">
+    {
+      links.map(({ label, href }) => (
+        <li>
+          <a
+            href={href}
+            target="_blank"
+            rel="nofollow sponsored noopener noreferrer"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-amber-400 hover:bg-amber-500 text-gray-900 font-semibold text-sm transition-colors shadow-sm"
+          >
+            「{label}」を Amazon で見る
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
